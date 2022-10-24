@@ -5,5 +5,7 @@ htmlcov/
 .coverage
 
 .ipynb_checkpoints/
+*.pptx
 _rvc/
 data/
+_temp/

@@ -61,7 +61,6 @@ class regVariableConversion(object):
     #####################################################################################
     ##############################################################   tool functions   ###
     #####################################################################################
-
     def _key2smf(self, label_list, returnLabel=False):
         """ key list is converted to smf format
 
@@ -143,7 +142,6 @@ class regVariableConversion(object):
     #####################################################################################
     ##############################################################   main functions   ###
     #####################################################################################
-
     def _cost(self):
         """ caluculate cost in all combination of element
         Cost are MSE, R, Homoscedasticity, AIC
@@ -307,7 +305,7 @@ class regVariableConversion(object):
 
         Mods:df_output
         """
-        out = self.df_output  # reference passing
+        out = self.df_output
         out[self.col_target] = self.df[self.col_target].values
         for i in range(len(self.res_key)):
             colx = self.col_ex[i]
