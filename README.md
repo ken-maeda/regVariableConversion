@@ -4,41 +4,23 @@
 
 'regVariableConversion' is a Python library for searching "appropriate" variables combination in regression method. Dataset itself is supported multivariate data but relationship between independent variables and dependent variables is one by one. So this library doesn't support interaction effect.
 
-## CHECKLIST
-- bug in smaller combination number
-
-## TODO
-- add test for plot
-- ~~pandas >> numpy maybe~~
-- store calculation flow of decision function to plot
-- store changepoint calculation result
-- indicate how much calculation will be done
-
-## IMPROVE
-- flexible input of new formula
-
-
-## Important links
-- High dependence library: [statsmodels](https://github.com/statsmodels/statsmodels)
-
+## How to use RVC
 
 ## Dependencies
-
-## Idea
-[statsmodels.formula.api.smf](https://www.statsmodels.org/stable/examples/notebooks/generated/formulas.html?highlight=formula) allows flexible variable combination. By calculating all combination it can find ideal one.
-
+- Numpy
+- Pandas
+- [Statsmodels](https://github.com/statsmodels/statsmodels)
 
 ## Support formula
-### <> default formula
-<img src="fig/default_formula.gif" width="835">
-<img src="fig/default_formula2.gif" width="400">
+$$ x, \ x^2, \ x^3, \ \frac{1}{x}, \ \sqrt{x}$$  
+$$ logx, \ xlogx, \ x^2logx, \ \frac{logx}{x}, \ \frac{1}{x^2}$$
+$$ x\sqrt{x}, \ \sqrt{logx}, \ \sqrt{xlogx} $$
 
-### <> optional formula
-coming later with function to custom
 
-## Basic usage
-
+## Search area
+a
 ## Decision algorithm
+a
 
 ## SubFunction
 + Sliding Function  

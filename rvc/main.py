@@ -1,8 +1,10 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
 import itertools
 from tqdm import tqdm
+from pathlib import Path
 from datetime import datetime
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
@@ -42,6 +44,8 @@ class regVariableConversion(object):
 
         # optional
         self.now = datetime.now().strftime('%Y_%m%d_%H%M%S')
+        self.dir_regPlot = "../_rvc/regPlot"
+        self.dir_temp = "../_temp"
 
     def _print(self, log):
         if self.on_log == True:
@@ -265,8 +269,7 @@ class regVariableConversion(object):
 
     def publish(self):
         """ 
-        Mods:
-            df_output
+        Mods: df_output
         """
         index_ = self.col_ex.copy()
         index_.append("Y")
@@ -291,8 +294,49 @@ class regVariableConversion(object):
             self.decision()
             
             if self.on_recAll: 
-                pd.to_pickle(self.costs, f"../_temp/{self.now}_{self.col_ex0}.pkl")
+                pd.to_pickle(self.costs, f"{self.dir_temp}/{self.now}_{self.col_ex0}.pkl")
 
         self.publish()
 
         return self.df_output
+
+    def plot_result(self, df, save=True):
+        Path(self.dir_regPlot).mkdir(parents=True, exist_ok=True)
+
+        num_graph = len(self.col_ex)
+        _, axes = plt.subplots(num_graph, 1, figsize=(8, 8*num_graph))
+        for i_col in range(len(self.col_ex)):
+            df_out_ = self.df_output.iloc[[i_col, -1], :]
+            col_origin = df_out_.iloc[:, 1].values  # AH, EP
+            col_replace = df_out_.index  # X0, Y
+
+            x_ = df.loc[:, col_origin[0]]
+            x_dummy = np.linspace(np.min(x_), np.max(x_), 100)
+
+            df_sel = df.loc[:, df_out_.iloc[:, 1].values]
+            df_sel.columns = col_replace
+            df_sel.iloc[:, 0] = df_sel.iloc[:, 0] + df_out_.iloc[0, -1]  # add gap
+            formula = df_out_.iloc[0, 0]
+
+            # optimized regression
+            results_opt = smf.ols(formula, data=df_sel).fit()
+            y_pred_opt = results_opt.predict(pd.DataFrame(x_dummy, columns=[col_replace[0]])).values
+
+            # linear regression
+            x_linear = sm.add_constant(df_sel.values[:, 0])
+            x_linear_dummy = sm.add_constant(x_dummy)
+            result_linear = sm.OLS(df_sel.values[:, 1], x_linear).fit()
+            y_pred_linear = result_linear.predict(x_linear_dummy)
+
+            # plot
+            sns.scatterplot(x=col_origin[0], y=col_origin[1], data=df, ax=axes[i_col])
+            axes[i_col].plot(x_dummy, y_pred_linear, color="red", linewidth=2, label="y~x")
+            axes[i_col].plot(x_dummy, y_pred_opt, color="orange", linewidth=3, label="y~opt(x)")
+            axes[i_col].set_title(f"[{col_origin[0]}] {formula}")
+            axes[i_col].legend()
+
+        if save == True:
+            plt.savefig(self.dir_regPlot+f"/{self.now}_{col_origin[1]}.png")
+            plt.close()  # disable to plot
+
+        plt.show()
