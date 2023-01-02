@@ -19,7 +19,7 @@ class regVariableConversion(object):
         self.on_recAll = kwargs.get("on_recAll", True)
 
         # key setting
-        self.comb = kwargs.get("comb", 3)  # number of factor
+        self.comb = kwargs.get("comb", 5)  # number of factor
         self.KEY = [
             "1", "2", "3", "4", "5", "6", "7", "8", "9", "a",
             "b", "c", "d"
@@ -45,6 +45,7 @@ class regVariableConversion(object):
         # optional
         self.now = datetime.now().strftime('%Y_%m%d_%H%M%S')
         self.dir_regPlot = "../_rvc/regPlot"
+        self.dir_costPlot = "../_rvc/costPlot"
         self.dir_temp = "../_temp"
 
     def _print(self, log):
@@ -151,8 +152,9 @@ class regVariableConversion(object):
                 X1, X2, Y1, Y2 = X[:i+1], X[i:], Y[:i+1], Y[i:]
                 res1 = sm.OLS(Y1, sm.add_constant(X1)).fit()
                 res2 = sm.OLS(Y2, sm.add_constant(X2)).fit()
-                score1 = np.abs(res1.resid)
-                score.append(np.sum(score1 + np.abs(res2.resid))/(len(X)+1))
+                score1 = np.sum(np.abs(res1.resid))
+                score2 = np.sum(np.abs(res2.resid))
+                score.append((score1 + score2)/(len(X)+1))
 
         idx_cp = np.array(score).argmin()
 
@@ -248,24 +250,23 @@ class regVariableConversion(object):
 
         if r < 0.6:  # well fitted? => No
             key_ = labels[keys[4]]
-            self.res_formula.append(self.key2smf(key_))
             self._print(f"[Result/{self.col_ex0}]:r is {r} >> 1d")
         else:
             mse_homo = self.df_bestCosts_mse.loc["homo", self.col_ex0]
             mse_mse = self.df_bestCosts_mse.loc["mse", self.col_ex0]
             if mse_homo/mse_mse > self.th_homoAndMse:
                 key_ = labels[keys[0]]
-                self.res_formula.append(self.key2smf(key_))
                 self._print(f"[Result/{self.col_ex0}]:homo/mse is {mse_homo/mse_mse} >> mse")
             else:
                 if numComb_mse >= numComb_homo:
                     key_ = labels[keys[2]]
-                    self.res_formula.append(self.key2smf(key_))
                     self._print(f"[Result/{self.col_ex0}]:mse,homo:{numComb_mse},{numComb_homo} >> mse")
                 else:
                     key_ = labels[keys[0]]
-                    self.res_formula.append(self.key2smf(key_))
                     self._print(f"[Result/{self.col_ex0}]:mse,homo:{numComb_mse},{numComb_homo} >> homo")
+
+        self.res_key.append(key_)
+        self.res_formula.append(self.key2smf(key_))
 
     def publish(self):
         """ 
