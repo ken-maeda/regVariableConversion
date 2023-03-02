@@ -29,11 +29,11 @@ out
 | Y ~ + X3:np.log(X3) | RH |
 
 ## Support formula
-[1]. $ \ x, \ x^2, \ x^3, \ \frac{1}{x}, \ \frac{1}{x^2}$  
+[1]. $\ x, \ x^2, \ x^3, \ \frac{1}{x}, \ \frac{1}{x^2}$  
 
-[2]. $ \ \sqrt{x}, \ x\sqrt{x}$
+[2]. $\ \sqrt{x}, \ x\sqrt{x}$
 
-[3]. $ \ logx, \ xlogx, \ x^2logx, \ \frac{logx}{x}, \ \sqrt{logx}, \ \sqrt{xlogx} $
+[3]. $\ logx, \ xlogx, \ x^2logx, \ \frac{logx}{x}, \ \sqrt{logx}, \ \sqrt{xlogx}$
 
 ## Search area
 You can specify limitation of factor combination.  
@@ -51,7 +51,7 @@ Basic idea is followings
 - 
 
 ## SubFunction
-+ CSV output 
++ CSV output  
 It can extract all combination costs in dataframe.
 
 + Sliding Function  
