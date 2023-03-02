@@ -9,7 +9,6 @@ from datetime import datetime
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
 
-
 class regVariableConversion(object):
     def __init__(self, **kwargs):
         # optional 
