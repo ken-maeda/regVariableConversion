@@ -44,11 +44,14 @@ For example, you specify 5. Each factor combination is following (in default for
 In total, it is 3952 combination by only 5 factors.
 
 ## Decision algorithm
+This package suggest "best" combination, which doesn't mean most highest fitting.  
+In increasing factor number, fitting score also goes up in even terreble fittng.
+
 Currently, the decision is being made on multiple indicatorson by staged structure.  
 Basic idea is followings 
 
-- If the fitting is bad, do not increase the number of elements.
-- 
+- If the fitting is bad, won't increase the number of elements.
+- As the number of factors increases, getting to place importance on homoscedasticity.
 
 ## SubFunction
 + CSV output  
